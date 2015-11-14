@@ -26,7 +26,7 @@ public class FXManager : MonoBehaviour
 
     IEnumerator TestCoroutine()
     {
-        FXBase f = PlayEffect("TweenAlpha", GameObject.Find("Cube").transform);
+        FXBase f = PlayEffect("TweenAlphaInvulnerability", GameObject.Find("Cube").transform);
         yield return new WaitForSeconds(5f);
         //f.Stop(3);
     }
