@@ -242,4 +242,40 @@ public class PlayerController : MonoBehaviour
 
         return Quaternion.identity;
     }
+
+    public void MoveRight()
+    {
+        if (direction != Vector3.left)
+        {
+            direction = Vector3.right;
+            t.rotation = Quaternion.Euler(0, 90, 0);
+        }
+    }
+
+    public void MoveLeft()
+    {
+        if (direction != Vector3.right)
+        {
+            direction = Vector3.left;
+            t.rotation = Quaternion.Euler(0, -90, 0);
+        }
+    }
+
+    public void MoveUp()
+    {
+        if (direction != Vector3.back)
+        {
+            direction = Vector3.forward;
+            t.rotation = Quaternion.Euler(0, 0, 0);
+        }
+    }
+
+    public void MoveDown()
+    {
+        if (direction != Vector3.forward)
+        {
+            direction = Vector3.back;
+            t.rotation = Quaternion.Euler(0, 180, 0);
+        }
+    }
 }

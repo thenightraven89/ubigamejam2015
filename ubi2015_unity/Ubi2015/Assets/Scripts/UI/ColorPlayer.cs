@@ -60,6 +60,7 @@ public class ColorPlayer : MonoBehaviour {
         playerSelection.SetActive(false);
         difficultySelection.SetActive(true);
         currentState = MainMenuStates.selectingDifficulty;
+        PlayerPrefs.SetInt("numberOfPlayers", activePlayers);
     }
 
     void SetDifficulty(int difficulty)
