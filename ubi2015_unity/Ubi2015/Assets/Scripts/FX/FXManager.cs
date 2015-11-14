@@ -40,6 +40,7 @@ public class FXManager : MonoBehaviour
             return null;
         }
         FXBase fx = (Instantiate(effectsDictionary[effectName], target.position, target.rotation) as GameObject).GetComponent<FXBase>();
+        Debug.Log(target);
         fx.Play(target);
         return fx;
     }
