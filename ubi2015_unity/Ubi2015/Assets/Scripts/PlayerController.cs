@@ -35,29 +35,17 @@ public class PlayerController : MonoBehaviour
         deadlyTrail = new Queue<GameObject>();
         trail = new Queue<GameObject>();
 
-        Respawn();
+        Respawn(false);
     }
 
-    private void Respawn()
+    private void Respawn(bool invul)
     {
         direction = initialDir;
         t.position = initialPos;
         t.rotation = GetRotationFromDirection(direction);
-        isInvulnerable = false;
+        isInvulnerable = invul;
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
-    }
-
-    private void ResetAlpha()
-    {
-        Renderer[] rnds = t.GetComponentsInChildren<Renderer>();
-
-        foreach (var rnd in rnds)
-        {
-            Material mat = rnd.material;
-            mat.SetFloat("_Mode", 0f);
-            mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
-        }
     }
 
     private void Die()
@@ -65,6 +53,7 @@ public class PlayerController : MonoBehaviour
         isInvulnerable = true;
         life = Mathf.Clamp(life - 1, 0, life);
         FXManager.Instance.PlayEffect("Explosion", t);
+        FXManager.Instance.PlayEffect("ExplosionDecal", t);
 
         // destroy trail
         StopCoroutine("AdvanceMovement");
@@ -85,7 +74,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Respawn();
+            Respawn(true);
             StartCoroutine(TempInvulnerable());
         }
     }
@@ -98,9 +87,12 @@ public class PlayerController : MonoBehaviour
             var to = from + direction;
             t.rotation = GetRotationFromDirection(direction);
 
-            var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
-            deadlyTrail.Enqueue(newObject);
-            trail.Enqueue(newObject);
+            if (!isInvulnerable)
+            {
+                var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
+                deadlyTrail.Enqueue(newObject);
+                trail.Enqueue(newObject);
+            }
 
             while (from != to)
             {
@@ -114,8 +106,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private float fallDelay = 0.3f;
+
     private IEnumerator AdvanceDecay()
     {
+        while (isInvulnerable)
+        {
+            yield return null;
+        }
+
         yield return new WaitForSeconds(ragaz);
 
         while (deadlyTrail.Count > 0)
@@ -124,6 +123,8 @@ public class PlayerController : MonoBehaviour
             deadlyTrail.Peek().GetComponent<FallAndFade>().Fall();
             deadlyTrail.Dequeue();
         }
+
+        yield return new WaitForSeconds(fallDelay);
 
         Die();
     }
