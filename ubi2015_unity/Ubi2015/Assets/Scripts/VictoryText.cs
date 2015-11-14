@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class VictoryText : MonoBehaviour
 {
@@ -9,29 +10,18 @@ public class VictoryText : MonoBehaviour
     {
         var textComp = GetComponent<Text>();
 
-        if (PlayerPrefs.GetInt("Player1") > 0)
+        Dictionary<string, Material> mats = new Dictionary<string, Material>()
         {
-            textComp.color = P1.color;
-            textComp.text = "Player 1 wins";
-        }
+            {"Player1", P1 },
+            {"Player2", P2 },
+            {"Player3", P3 },
+            {"Player4", P4 }
+        };
 
-        if (PlayerPrefs.GetInt("Player2") > 0)
-        {
-            textComp.color = P2.color;
-            textComp.text = "Player 2 wins";
-        }
+        var winner = PlayerPrefs.GetString("winner");
 
-        if (PlayerPrefs.GetInt("Player3") > 0)
-        {
-            textComp.color = P3.color;
-            textComp.text = "Player 3 wins";
-        }
-
-        if (PlayerPrefs.GetInt("Player4") > 0)
-        {
-            textComp.color = P4.color;
-            textComp.text = "Player 4 wins";
-        }
+        textComp.text = winner + " wins!";
+        textComp.color = mats[winner].color;
     }
 
     private void Update()

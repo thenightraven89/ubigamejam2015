@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,13 +19,10 @@ public class PlayerController : MonoBehaviour
     private Transform t;
     private Vector3 initialPos;
     private Vector3 initialDir;
+    public int life = 5;
 
     private Queue<GameObject> deadlyTrail;
     private Queue<GameObject> trail;
-
-    private const string PLAYER_COUNT_PREF = "playerCount";
-    private const string SCENE_MAIN = "Main";
-    private const string SCENE_END = "EndScene";
 
     private void Start()
     {
@@ -64,24 +60,11 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("AdvanceMovement");
         StopCoroutine("AdvanceDecay");
 
-        // remove 1 life
-        var lifeCount = PlayerPrefs.GetInt(gameObject.name) - 1;
-        PlayerPrefs.SetInt(gameObject.name, lifeCount);
-        ScoreManager.instance.UpdateScore(gameObject.name);
+        life = Mathf.Clamp(life - 1, 0, life);
         
-        if (lifeCount == 0)
+        if (life == 0)
         {
-            // remove 1 player
-
-            var playerCount = PlayerPrefs.GetInt(PLAYER_COUNT_PREF) - 1;
-            PlayerPrefs.SetInt(PLAYER_COUNT_PREF, playerCount);
-
-            // game over
-
-            if (playerCount == 1)
-            {
-                Application.LoadLevel(SCENE_END);
-            }
+            gameObject.SetActive(false);
         }
         else
         {

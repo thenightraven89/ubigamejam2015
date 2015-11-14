@@ -4,14 +4,14 @@ using UnityEngine.UI;
 public class PlayerScore : MonoBehaviour
 {
     public string playerId;
-
-    private void Start()
+    private int cachedScore = 0;
+    
+    public void Set(int score)
     {
-        Load();
-    }
-
-    public void Load()
-    {
-        GetComponent<Text>().text = PlayerPrefs.GetInt(playerId).ToString();
+        if (score != cachedScore)
+        {
+            cachedScore = score;
+            GetComponent<Text>().text = score.ToString();
+        }
     }
 }
