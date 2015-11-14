@@ -119,9 +119,7 @@ public class PlayerController : MonoBehaviour
             deadlyTrail.Peek().GetComponent<FallAndFade>().Fall();
             deadlyTrail.Dequeue();
         }
-
-        yield return new WaitForSeconds(fallDelay);
-
+        
         Die();
     }
 
