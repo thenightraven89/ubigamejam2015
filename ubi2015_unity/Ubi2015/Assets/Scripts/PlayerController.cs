@@ -28,25 +28,21 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         t = transform;
-
         initialPos = t.position;
         initialDir = direction;
-        t.rotation = GetRotationFromDirection(direction);
-
         deadlyTrail = new Queue<GameObject>();
         trail = new Queue<GameObject>();
+
         Respawn();
     }
 
     private void Respawn()
     {
-        t.position = initialPos;
         direction = initialDir;
+        t.position = initialPos;
         t.rotation = GetRotationFromDirection(direction);
         isInvulnerable = false;
-
-        StopCoroutine("AdvanceMovement");
-        StopCoroutine("AdvanceDecay");
+        
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
     }
@@ -54,25 +50,21 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         isInvulnerable = true;
+        life = Mathf.Clamp(life - 1, 0, life);
+        FXManager.Instance.PlayEffect("Explosion", t);
+
         // destroy trail
         StopCoroutine("AdvanceMovement");
         StopCoroutine("AdvanceDecay");
 
-        FXManager.Instance.PlayEffect("Explosion", t);
-
         while (trail.Count > 0)
         {
             var trailObject = trail.Peek().gameObject;
-            //trailObject.GetComponentInChildren<Collider>().enabled = false;
             GameObject.Destroy(trailObject);
             trail.Dequeue();
         }
 
         deadlyTrail.Clear();
-
-
-
-        life = Mathf.Clamp(life - 1, 0, life);
         
         if (life == 0)
         {
@@ -80,21 +72,31 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // respawn
             Respawn();
-            //StartCoroutine("TempInvulnerable");
         }
     }
 
-
-    private float invulnerabilityTime = 3f;
-
-    private IEnumerator TempInvulnerable()
+    private IEnumerator AdvanceMovement()
     {
-        isInvulnerable = true;
-        FXManager.Instance.PlayEffect("TweenAlphaInvulnerability", t);
-        yield return new WaitForSeconds(invulnerabilityTime);
-        isInvulnerable = false;
+        while (true)
+        {
+            var from = t.position;
+            var to = from + direction;
+            t.rotation = GetRotationFromDirection(direction);
+
+            var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
+            deadlyTrail.Enqueue(newObject);
+            trail.Enqueue(newObject);
+
+            while (from != to)
+            {
+                from = Vector3.MoveTowards(from, to, speed * Time.deltaTime);
+                t.position = from;
+                yield return null;
+            }
+
+            t.position = from;
+        }
     }
 
     private IEnumerator AdvanceDecay()
@@ -109,28 +111,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Die();
-    }
-
-    private IEnumerator AdvanceMovement()
-    {
-        var from = t.position;
-        var to = from + direction;
-        t.rotation = GetRotationFromDirection(direction);
-
-        var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
-        deadlyTrail.Enqueue(newObject);
-        trail.Enqueue(newObject);
-        
-        while (from != to)
-        {
-            from = Vector3.MoveTowards(from, to, speed * Time.deltaTime);
-            t.position = from;
-            yield return null;
-        }
-
-        t.position = from;
-
-        yield return StartCoroutine(AdvanceMovement());
     }
 
     private void Update()
@@ -154,9 +134,20 @@ public class PlayerController : MonoBehaviour
         {
             MoveLeft();
         }
+
+
     }
 
     private bool isInvulnerable;
+    private float invulnerabilityTime = 3f;
+
+    private IEnumerator TempInvulnerable()
+    {
+        isInvulnerable = true;
+        FXManager.Instance.PlayEffect("TweenAlphaInvulnerability", t);
+        yield return new WaitForSeconds(invulnerabilityTime);
+        isInvulnerable = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -175,14 +166,20 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (other.CompareTag("Environment"))
+        {
+            Die();
+            return;
+        }
+
         if (other.CompareTag("PowerupTime"))
         {
-            MovePowerupRandomly(other.gameObject);
+            MovePowerupRandomly(other.transform.parent);
             StartCoroutine("DelayDecay");
         }
     }
 
-    private void MovePowerupRandomly(GameObject powerup)
+    private void MovePowerupRandomly(Transform powerupTransform)
     {
         bool areaOk = false;
         int randX = 0;
@@ -208,7 +205,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        powerup.transform.parent.position = new Vector3(randX, 0, randZ);
+        powerupTransform.transform.position = new Vector3(randX, 0, randZ);
     }
 
     private IEnumerator DelayDecay()
