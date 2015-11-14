@@ -21,14 +21,14 @@ public class FXManager : MonoBehaviour
                effectsDictionary.Add(x.name, x);
            }
        });
-        StartCoroutine(TestCoroutine());
+        //StartCoroutine(TestCoroutine());
 	}
 
     IEnumerator TestCoroutine()
     {
-        FXBase f = PlayEffect("LoopTest");
+        FXBase f = PlayEffect("TweenAlpha", GameObject.Find("Cube").transform);
         yield return new WaitForSeconds(5f);
-        f.Stop(3);
+        //f.Stop(3);
     }
 
     public FXBase PlayEffect(string effectName, Transform target)
