@@ -14,6 +14,11 @@ public class FXBase : MonoBehaviour
     protected AudioSource audioSource;
     protected TweenEffectBase tweenEffect;
 
+    void Awake()
+    {
+        Play();
+    }
+
     public virtual void Play(Transform target = null)
     {
         Target = target;

@@ -10,7 +10,9 @@ public class TweenAlpha : TweenEffectBase
     public override void Play(Transform target)
     {
         base.Play(target);
-        tweener = target.GetComponent<Renderer>().material.DOFade(0f, duration);
+        Material mat = target.GetComponent<Renderer>().material;
+        mat.SetFloat("_Mode", 2f);
+        tweener = mat.DOFade(0f, duration);
         if (loops != -1)
             loops *= 2;
         tweener.SetLoops(loops, LoopType.Yoyo);
@@ -27,6 +29,7 @@ public class TweenAlpha : TweenEffectBase
     {
         tweener.Kill();
         Material mat = Target.GetComponent<Renderer>().material;
+        mat.SetFloat("_Mode", 0f);
         mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1);
     }
 }

@@ -33,6 +33,10 @@ public class FXManager : MonoBehaviour
 
     public FXBase PlayEffect(string effectName, Transform target)
     {
+        if (!effectsDictionary.ContainsKey(effectName))
+        {
+            return null;
+        }
         FXBase fx = (Instantiate(effectsDictionary[effectName], target.position, target.rotation) as GameObject).GetComponent<FXBase>();
         fx.Play(target);
         return fx;
@@ -40,6 +44,10 @@ public class FXManager : MonoBehaviour
 
     public FXBase PlayEffect(string effectName, Vector3 target)
     {
+        if (!effectsDictionary.ContainsKey(effectName))
+        {
+            return null;
+        }
         FXBase fx = (Instantiate(effectsDictionary[effectName], target, Quaternion.identity) as GameObject).GetComponent<FXBase>();
         fx.Play();
         return fx;
@@ -47,6 +55,10 @@ public class FXManager : MonoBehaviour
 
     public FXBase PlayEffect(string effectName)
     {
+        if (!effectsDictionary.ContainsKey(effectName))
+        {
+            return null;
+        }
         FXBase fx = (Instantiate(effectsDictionary[effectName], transform.position, transform.rotation) as GameObject).GetComponent<FXBase>();
         fx.Play();
         return fx;
