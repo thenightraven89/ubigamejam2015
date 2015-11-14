@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     public GameObject trailObject;
 
-    private float speedModifier = 1f;
     private float trailLife = 0.08f;
     private float ragaz = 2f;
     private float speed = 8f;
@@ -22,8 +21,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 initialPos;
     private Vector3 initialDir;
     public int life = 5;
-    public float turnSpeedMultipllier = 3f;
-
     private Queue<GameObject> deadlyTrail;
     private Queue<GameObject> trail;
 
@@ -96,8 +93,7 @@ public class PlayerController : MonoBehaviour
 
             while (from != to)
             {
-                from = Vector3.MoveTowards(from, to, speed * speedModifier * Time.deltaTime);
-                speedModifier = 1;
+                from = Vector3.MoveTowards(from, to, speed * Time.deltaTime);
                 t.position = from;
                 yield return null;
             }
@@ -265,7 +261,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.left)
         {
             direction = Vector3.right;
-            speedModifier = turnSpeedMultipllier;
         }
     }
 
@@ -274,7 +269,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.right)
         {
             direction = Vector3.left;
-            speedModifier = turnSpeedMultipllier;
         }
     }
 
@@ -283,7 +277,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.back)
         {
             direction = Vector3.forward;
-            speedModifier = turnSpeedMultipllier;
         }
     }
 
@@ -292,7 +285,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.forward)
         {
             direction = Vector3.back;
-            speedModifier = turnSpeedMultipllier;
         }
     }
 }
