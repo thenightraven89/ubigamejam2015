@@ -13,6 +13,8 @@ public class FXManager : MonoBehaviour
 
     void Awake ()
     {
+        Instance = this;
+
         effectsDictionary = new Dictionary<string, GameObject>();
         effects.ForEach(x =>
        {

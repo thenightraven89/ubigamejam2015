@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
         deadlyTrail = new Queue<GameObject>();
         trail = new Queue<GameObject>();
+        isInvulnerable = false;
         Respawn();
     }
 
@@ -42,6 +43,7 @@ public class PlayerController : MonoBehaviour
     {
         t.position = initialPos;
         direction = initialDir;
+        t.rotation = GetRotationFromDirection(direction);
 
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
@@ -50,6 +52,8 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         // destroy trail
+
+        FXManager.Instance.PlayEffect("Explosion", t);
 
         while (trail.Count > 0)
         {
@@ -72,7 +76,19 @@ public class PlayerController : MonoBehaviour
         {
             // respawn
             Respawn();
+            StartCoroutine("TempInvulnerable");
         }
+    }
+
+
+    private float invulnerabilityTime = 3f;
+
+    private IEnumerator TempInvulnerable()
+    {
+        isInvulnerable = true;
+        FXManager.Instance.PlayEffect("TweenAlphaInvulnerability", t);
+        yield return new WaitForSeconds(invulnerabilityTime);
+        isInvulnerable = false;
     }
 
     private IEnumerator AdvanceDecay()
@@ -94,7 +110,7 @@ public class PlayerController : MonoBehaviour
         var from = t.position;
         var to = from + direction;
 
-        var newObject = Instantiate(trailObject, from, Quaternion.identity) as GameObject;
+        var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
         deadlyTrail.Enqueue(newObject);
         trail.Enqueue(newObject);
         
@@ -135,17 +151,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private bool isInvulnerable;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            Die();
-        }
-
         // to not die in generated trail we do this:
         if (other.CompareTag("FreshTrail"))
         {
             other.tag = "Player";
+            return;
+        }
+
+        Debug.Log(gameObject.name + " collided with " + other.tag);
+
+        if (other.CompareTag("Player") && !isInvulnerable)
+        {
+            Die();
+            return;
         }
 
         if (other.CompareTag("PowerupTime"))
