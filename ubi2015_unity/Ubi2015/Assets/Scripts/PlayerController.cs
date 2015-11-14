@@ -13,9 +13,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject trailObject;
 
-    private float trailLife = 0.05f;
+    private float trailLife = 0.08f;
     private float ragaz = 2f;
-    private float speed = 10f;
+    private float speed = 8f;
     private Transform t;
     private Vector3 initialPos;
     private Vector3 initialDir;
@@ -141,5 +141,47 @@ public class PlayerController : MonoBehaviour
         {
             other.tag = "Player";
         }
+
+        if (other.CompareTag("PowerupTime"))
+        {
+            MovePowerupRandomly(other.gameObject);
+            StartCoroutine("DelayDecay");
+        }
+    }
+
+    private void MovePowerupRandomly(GameObject powerup)
+    {
+        bool areaOk = false;
+        int randX = 0;
+        int randZ = 0;
+        RaycastHit hit;
+
+        while (!areaOk)
+        {
+            randX = Random.Range(-15, 16);
+            randZ = Random.Range(-15, 16);
+            var cast = Physics.Raycast(new Vector3(randX, 100, randZ), Vector3.down, out hit);
+            if (cast)
+            {
+                if (!hit.transform.CompareTag("Player") &&
+                    !hit.transform.CompareTag("PowerupTime"))
+                {
+                    areaOk = true;
+                }
+            }
+            else
+            {
+                areaOk = true;
+            }
+        }
+
+        powerup.transform.position = new Vector3(randX, 0, randZ);
+    }
+
+    private IEnumerator DelayDecay()
+    {
+        trailLife *= 2f;
+        yield return new WaitForSeconds(2f);
+        trailLife /= 2f;
     }
 }
