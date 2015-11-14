@@ -13,7 +13,7 @@ public class TweenEffectBase : MonoBehaviour
 
     public virtual void Stop(float fadeOutTime)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 
     void OnDestroy()
