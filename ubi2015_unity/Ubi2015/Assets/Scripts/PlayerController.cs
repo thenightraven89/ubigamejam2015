@@ -42,9 +42,20 @@ public class PlayerController : MonoBehaviour
         t.position = initialPos;
         t.rotation = GetRotationFromDirection(direction);
         isInvulnerable = false;
-        
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
+    }
+
+    private void ResetAlpha()
+    {
+        Renderer[] rnds = t.GetComponentsInChildren<Renderer>();
+
+        foreach (var rnd in rnds)
+        {
+            Material mat = rnd.material;
+            mat.SetFloat("_Mode", 0f);
+            mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
+        }
     }
 
     private void Die()
@@ -73,6 +84,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Respawn();
+            StartCoroutine(TempInvulnerable());
         }
     }
 
@@ -140,11 +152,15 @@ public class PlayerController : MonoBehaviour
 
     private bool isInvulnerable;
     private float invulnerabilityTime = 3f;
-
+    private FXBase inv;
     private IEnumerator TempInvulnerable()
     {
         isInvulnerable = true;
-        FXManager.Instance.PlayEffect("TweenAlphaInvulnerability", t);
+        if (inv != null)
+        {
+            inv.Stop();
+        }
+        inv = FXManager.Instance.PlayEffect("TweenAlphaInvulnerability", t);
         yield return new WaitForSeconds(invulnerabilityTime);
         isInvulnerable = false;
     }
@@ -188,8 +204,8 @@ public class PlayerController : MonoBehaviour
 
         while (!areaOk)
         {
-            randX = Random.Range(-15, 16);
-            randZ = Random.Range(-15, 16);
+            randX = UnityEngine.Random.Range(-15, 16);
+            randZ = UnityEngine.Random.Range(-15, 16);
             var cast = Physics.Raycast(new Vector3(randX, 100, randZ), Vector3.down, out hit);
             if (cast)
             {
