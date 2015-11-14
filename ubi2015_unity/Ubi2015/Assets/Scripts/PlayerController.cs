@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
         while (deadlyTrail.Count > 0)
         {
             yield return new WaitForSeconds(trailLife);
-            deadlyTrail.Peek().GetComponentInChildren<Renderer>().material.color = Color.gray;
+            deadlyTrail.Peek().GetComponent<FallAndFade>().Fall();
             deadlyTrail.Dequeue();
         }
 
