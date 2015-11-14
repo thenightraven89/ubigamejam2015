@@ -19,6 +19,11 @@ public class MovePlayer : MonoBehaviour {
 
     void Update()
     {
+        CheckJoysticks();
+    }
+
+    void CheckJoysticks()
+    {
         x = Input.GetAxis(horizName);
         y = Input.GetAxis(verticalName);
 
@@ -43,6 +48,7 @@ public class MovePlayer : MonoBehaviour {
             {
                 controller.MoveUp();
             }
-        }       
+        }  
     }
+    
 }
