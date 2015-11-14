@@ -137,22 +137,22 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(keyUp) && direction != Vector3.back)
         {
-            direction = Vector3.forward;
+            MoveUp();
         }
         
         if (Input.GetKeyDown(keyRight) && direction != Vector3.left)
         {
-            direction = Vector3.right;
+            MoveRight();
         }
 
         if (Input.GetKeyDown(keyDown) && direction != Vector3.forward)
         {
-            direction = Vector3.back;
+            MoveDown();
         }
 
         if (Input.GetKeyDown(keyLeft) && direction != Vector3.right)
         {
-            direction = Vector3.left;
+            MoveLeft();
         }
     }
 
@@ -248,7 +248,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.left)
         {
             direction = Vector3.right;
-            t.rotation = Quaternion.Euler(0, 90, 0);
         }
     }
 
@@ -257,7 +256,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.right)
         {
             direction = Vector3.left;
-            t.rotation = Quaternion.Euler(0, -90, 0);
         }
     }
 
@@ -266,7 +264,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.back)
         {
             direction = Vector3.forward;
-            t.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -275,7 +272,6 @@ public class PlayerController : MonoBehaviour
         if (direction != Vector3.forward)
         {
             direction = Vector3.back;
-            t.rotation = Quaternion.Euler(0, 180, 0);
         }
     }
 }
