@@ -5,9 +5,9 @@ public class MovePlayer : MonoBehaviour {
 
     public int playerID;
     public PlayerController controller;
-    public float delta = 0.3f;
     private float x, y;
-
+    private bool xDisabled, yDisabled = false;
+    
     private string horizName;
     private string verticalName;
 
@@ -22,22 +22,27 @@ public class MovePlayer : MonoBehaviour {
         x = Input.GetAxis(horizName);
         y = Input.GetAxis(verticalName);
 
-        Debug.Log(Input.GetJoystickNames().Length);
-
-        if (Mathf.Abs(x) > delta)
+        if (Mathf.Abs(x) > Mathf.Abs(y))
         {
             if (x > 0)
+            {
                 controller.MoveRight();
+            }
             else
+            {
                 controller.MoveLeft();
-        }   
-
-        if (Mathf.Abs(y) > delta)
+            }
+        }
+        else if (Mathf.Abs(x) < Mathf.Abs(y))
         {
             if (y > 0)
+            {
                 controller.MoveDown();
+            }
             else
+            {
                 controller.MoveUp();
-        }     
+            }
+        }       
     }
 }
