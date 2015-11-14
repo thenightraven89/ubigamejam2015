@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour
 
         deadlyTrail = new Queue<GameObject>();
         trail = new Queue<GameObject>();
-        isInvulnerable = false;
         Respawn();
     }
 
@@ -44,27 +43,34 @@ public class PlayerController : MonoBehaviour
         t.position = initialPos;
         direction = initialDir;
         t.rotation = GetRotationFromDirection(direction);
+        isInvulnerable = false;
 
+        StopCoroutine("AdvanceMovement");
+        StopCoroutine("AdvanceDecay");
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
     }
 
     private void Die()
     {
+        isInvulnerable = true;
         // destroy trail
+        StopCoroutine("AdvanceMovement");
+        StopCoroutine("AdvanceDecay");
 
         FXManager.Instance.PlayEffect("Explosion", t);
 
         while (trail.Count > 0)
         {
-            GameObject.Destroy(trail.Peek().gameObject);
+            var trailObject = trail.Peek().gameObject;
+            //trailObject.GetComponentInChildren<Collider>().enabled = false;
+            GameObject.Destroy(trailObject);
             trail.Dequeue();
         }
 
         deadlyTrail.Clear();
 
-        StopCoroutine("AdvanceMovement");
-        StopCoroutine("AdvanceDecay");
+
 
         life = Mathf.Clamp(life - 1, 0, life);
         
@@ -76,7 +82,7 @@ public class PlayerController : MonoBehaviour
         {
             // respawn
             Respawn();
-            StartCoroutine("TempInvulnerable");
+            //StartCoroutine("TempInvulnerable");
         }
     }
 
@@ -109,6 +115,7 @@ public class PlayerController : MonoBehaviour
     {
         var from = t.position;
         var to = from + direction;
+        t.rotation = GetRotationFromDirection(direction);
 
         var newObject = Instantiate(trailObject, from, t.rotation) as GameObject;
         deadlyTrail.Enqueue(newObject);
@@ -118,8 +125,10 @@ public class PlayerController : MonoBehaviour
         {
             from = Vector3.MoveTowards(from, to, speed * Time.deltaTime);
             t.position = from;
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
+
+        t.position = from;
 
         yield return StartCoroutine(AdvanceMovement());
     }
@@ -129,25 +138,21 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(keyUp) && direction != Vector3.back)
         {
             direction = Vector3.forward;
-            t.rotation = Quaternion.Euler(0, 0, 0);
         }
         
         if (Input.GetKeyDown(keyRight) && direction != Vector3.left)
         {
             direction = Vector3.right;
-            t.rotation = Quaternion.Euler(0, 90, 0);
         }
 
         if (Input.GetKeyDown(keyDown) && direction != Vector3.forward)
         {
             direction = Vector3.back;
-            t.rotation = Quaternion.Euler(0, 180, 0);
         }
 
         if (Input.GetKeyDown(keyLeft) && direction != Vector3.right)
         {
             direction = Vector3.left;
-            t.rotation = Quaternion.Euler(0, -90, 0);
         }
     }
 
@@ -203,7 +208,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        powerup.transform.position = new Vector3(randX, 0, randZ);
+        powerup.transform.parent.position = new Vector3(randX, 0, randZ);
     }
 
     private IEnumerator DelayDecay()
