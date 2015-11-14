@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
         initialPos = t.position;
         initialDir = direction;
+        t.rotation = GetRotationFromDirection(direction);
 
         deadlyTrail = new Queue<GameObject>();
         trail = new Queue<GameObject>();
@@ -111,21 +113,25 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(keyUp) && direction != Vector3.back)
         {
             direction = Vector3.forward;
+            t.rotation = Quaternion.Euler(0, 0, 0);
         }
         
         if (Input.GetKeyDown(keyRight) && direction != Vector3.left)
         {
             direction = Vector3.right;
+            t.rotation = Quaternion.Euler(0, 90, 0);
         }
 
         if (Input.GetKeyDown(keyDown) && direction != Vector3.forward)
         {
             direction = Vector3.back;
+            t.rotation = Quaternion.Euler(0, 180, 0);
         }
 
         if (Input.GetKeyDown(keyLeft) && direction != Vector3.right)
         {
             direction = Vector3.left;
+            t.rotation = Quaternion.Euler(0, -90, 0);
         }
     }
 
@@ -183,5 +189,30 @@ public class PlayerController : MonoBehaviour
         trailLife *= 2f;
         yield return new WaitForSeconds(2f);
         trailLife /= 2f;
+    }
+
+    private Quaternion GetRotationFromDirection(Vector3 d)
+    {
+        if (d == Vector3.forward)
+        {
+            return Quaternion.Euler(0, 0, 0);
+        }
+
+        if (d == Vector3.back)
+        {
+            return Quaternion.Euler(0, 180, 0);
+        }
+
+        if (d == Vector3.left)
+        {
+            return Quaternion.Euler(0, -90, 0);
+        }
+
+        if (d == Vector3.right)
+        {
+            return Quaternion.Euler(0, 90, 0);
+        }
+
+        return Quaternion.identity;
     }
 }
