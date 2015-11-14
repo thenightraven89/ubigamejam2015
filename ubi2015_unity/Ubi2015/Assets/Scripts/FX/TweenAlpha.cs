@@ -1,37 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class TweenAlpha : TweenEffectBase
 {
     public int loops;
-    Tweener tweener;
-
+    List<Tweener> tweener;
     public override void Play(Transform target)
     {
         base.Play(target);
-        var rend = target.GetComponentInChildren<Renderer>();
-        Debug.Log(rend);
-        Material mat = rend.material;
-        mat.SetFloat("_Mode", 2f);
-        tweener = mat.DOFade(0f, duration);
-        if (loops != -1)
-            loops *= 2;
-        tweener.SetLoops(loops, LoopType.Yoyo);
-        tweener.OnComplete(new TweenCallback(StopCallback));
+        tweener = new List<Tweener>();
+        if (target != null)
+        {
+            Renderer[] rend = target.GetComponentsInChildren<Renderer>();
+            foreach (var x in rend)
+            {
+                Material mat = x.material;
+                x.material = mat;
+                mat.SetFloat("_Mode", 1f);
+                Tweener tw = DOTween.To(() => mat.GetColor("_Color"), c => mat.SetColor("_Color", c),
+                                new Color( mat.color.r, mat.color.g, mat.color.b, 0f), duration);
+                tweener.Add(tw);
+                if (loops != -1)
+                    loops *= 2;
+                tw.SetLoops(loops, LoopType.Yoyo);
+            }
+
+            tweener[0].OnComplete(new TweenCallback(StopCallback));
+        }
     }
 
     private void StopCallback()
     {
+        Debug.Log("stopped");
         Stop(0f);
         Destroy(gameObject);
     }
 
     public override void Stop(float fadeOutTime)
     {
-        tweener.Kill();
-        Material mat = Target.GetComponentInChildren<Renderer>().material;
-        mat.SetFloat("_Mode", 0f);
-        mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1);
+        if (Target == null)
+            return;
+        foreach (var tw in tweener)
+        {
+            tw.Kill();
+        }
+        Renderer[] rnds = Target.GetComponentsInChildren<Renderer>();
+        
+        foreach (var rnd in rnds)
+        {
+            Material mat = rnd.material;
+            mat.SetFloat("_Mode", 0f);
+            mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
+        }
     }
 }
