@@ -12,6 +12,10 @@ public class ColorPlayer : MonoBehaviour {
     public GameObject playerSelection;
     public GameObject difficultySelection;
 
+    public GameObject pressStart;
+
+    private bool canContinue = false;
+
     public enum MainMenuStates { selectingCharacter, selectingDifficulty };
     public MainMenuStates currentState = MainMenuStates.selectingCharacter;
 
@@ -29,7 +33,7 @@ public class ColorPlayer : MonoBehaviour {
 
             startGameKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button7");
 
-            if (Input.GetKeyDown(startGameKey))
+            if (Input.GetKeyDown(startGameKey) && canContinue)
             {
                 buttonPush.Play();
                 MoveToDifficulty();
@@ -40,6 +44,11 @@ public class ColorPlayer : MonoBehaviour {
                 if (Input.GetKeyDown(enterGameKey))
                 {
                     activePlayers++;
+                    if (activePlayers > 1)
+                    {
+                        pressStart.SetActive(true);
+                        canContinue = true;
+                    }
                     buttonPush.Play();
                     playerImages[i].color = colors[i];
                 }  
