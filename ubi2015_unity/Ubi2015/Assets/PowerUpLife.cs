@@ -7,6 +7,7 @@ public class PowerUpLife : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             col.transform.parent.GetComponent<PlayerController>().life++;
+            FXManager.Instance.PlayEffect("powerupsound", transform);
             GameObject.Destroy(gameObject);
         }
     }

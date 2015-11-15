@@ -29,7 +29,7 @@ public class PowerUpShield : MonoBehaviour
     IEnumerator DelayDestroy()
     {
         yield return new WaitForSeconds(duration);
-        affectedPlayer.hasShiled = false;
+        if(affectedPlayer != null) affectedPlayer.hasShiled = false;
         Destroy(shieldInstance);
         Destroy(gameObject);
     }

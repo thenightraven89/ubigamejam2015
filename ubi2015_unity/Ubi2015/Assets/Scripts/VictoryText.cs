@@ -22,7 +22,7 @@ public class VictoryText : MonoBehaviour
         var winner = PlayerPrefs.GetString("winner");
 
         textComp.text = winner + " wins!";
-        //textComp.color = mats[winner].color;
+        textComp.color = mats[winner].color;
     }
 
     private void Update()

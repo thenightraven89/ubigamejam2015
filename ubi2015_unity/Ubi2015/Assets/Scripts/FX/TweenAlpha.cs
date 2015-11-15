@@ -46,14 +46,20 @@ public class TweenAlpha : TweenEffectBase
     {
         if (Target == null)
             return;
-        foreach (var tw in tweener)
+        for (int i = 0; i < tweener.Count; i++)
         {
-            tw.Kill();
+            tweener[i].Kill();
         }
+        //foreach (var tw in tweener)
+        //{
+        //    tw.Kill();
+        //}
         Renderer[] rnds = Target.GetComponentsInChildren<Renderer>();
 
-        foreach (var rnd in rnds)
+        for (int i = 0; i < rnds.Length; i++)
         {
+            Renderer rnd = rnds[i];
+
             if (!rnd.gameObject.name.Equals("ghost") &&
                 !rnd.gameObject.name.Equals("smoke"))
             {
@@ -62,5 +68,16 @@ public class TweenAlpha : TweenEffectBase
                 mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
             }
         }
+
+        //foreach (var rnd in rnds)
+        //{
+        //    if (!rnd.gameObject.name.Equals("ghost") &&
+        //        !rnd.gameObject.name.Equals("smoke"))
+        //    {
+        //        Material mat = rnd.material;
+        //        mat.SetFloat("_Mode", 0f);
+        //        mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
+        //    }
+        //}
     }
 }
