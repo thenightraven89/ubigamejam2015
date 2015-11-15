@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         life = Mathf.Clamp(life - 1, 0, life);
         FXManager.Instance.PlayEffect("Explosion", t);
         FXManager.Instance.PlayEffect("ExplosionDecal", t);
+        
 
         // destroy trail
         StopCoroutine("AdvanceMovement");
