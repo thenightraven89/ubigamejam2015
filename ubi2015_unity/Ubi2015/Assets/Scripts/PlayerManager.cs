@@ -5,17 +5,13 @@ public class PlayerManager : MonoBehaviour
 {
     private Dictionary<string, PlayerScore> lifeLabels;
     private Dictionary<string, PlayerController> players;
-    public bool getPlayersFromInput = false;
+    public bool getPlayersFromInspector = false;
     public int nrOfPlayers = 2;
     public GameObject[] playerGOs;
 
     private void Awake()
     {
-        if (getPlayersFromInput)
-        {
-            nrOfPlayers = Input.GetJoystickNames().Length;
-        }
-        else
+        if (!getPlayersFromInspector)
         {
             nrOfPlayers = PlayerPrefs.GetInt("numberOfPlayers");
         }
