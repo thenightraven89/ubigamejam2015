@@ -148,7 +148,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private bool isInvulnerable;
+    public bool isInvulnerable;
     private float invulnerabilityTime = 3f;
     private FXBase inv;
     private IEnumerator TempInvulnerable()
