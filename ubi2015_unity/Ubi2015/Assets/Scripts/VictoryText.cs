@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class VictoryText : MonoBehaviour
 {
     public Material P1, P2, P3, P4;
-    
+    private KeyCode startGameKey;
+
     private void Start()
     {
         var textComp = GetComponent<Text>();
@@ -26,9 +27,17 @@ public class VictoryText : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        for (int i = 0; i < 4; i++)
         {
-            Application.LoadLevel("Main");
+            startGameKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button7");
+            
+            if (Input.GetKeyDown(startGameKey) ||
+                Input.GetKeyDown(KeyCode.Space))
+            {
+                Application.LoadLevel("Main");
+            }
         }
+
+
     }
 }

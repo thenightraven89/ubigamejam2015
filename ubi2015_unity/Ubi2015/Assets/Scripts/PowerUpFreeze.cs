@@ -27,7 +27,7 @@ public class PowerUpFreeze : MonoBehaviour
                     mv.speed = 1f;
                     Debug.Log("Disabled " + mv.name);
                     affectedMovers.Add(mv);
-
+                    FXManager.Instance.PlayEffect("powerupsound");
                     var fx = Instantiate(freezeEffect) as GameObject;
                     fx.name = "fx";
                     fx.transform.parent = mv.transform;
