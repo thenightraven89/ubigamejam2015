@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -70,7 +71,7 @@ public class PlayerManager : MonoBehaviour
         if (playerCount == 1)
         {
             PlayerPrefs.SetString("winner", lastLivingPlayer);
-            Application.LoadLevel("EndScene");
+            StartCoroutine(DelayEnd());
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -78,4 +79,12 @@ public class PlayerManager : MonoBehaviour
             Application.Quit();
         }
     }
+
+    IEnumerator DelayEnd()
+    {
+        yield return new WaitForSeconds(2);
+        Application.LoadLevel("EndScene");
+    }
+
+
 }
