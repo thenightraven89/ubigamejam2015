@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public int life = 5;
     private Queue<GameObject> deadlyTrail;
     private Queue<GameObject> trail;
+    public bool hasShiled;
 
     private void Start()
     {
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log(gameObject.name + " collided with " + other.tag);
 
-        if (other.CompareTag("Player") && !isInvulnerable)
+        if (other.CompareTag("Player") && !isInvulnerable && !hasShiled)
         {
             Die();
             return;
