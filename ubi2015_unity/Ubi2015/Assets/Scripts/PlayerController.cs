@@ -42,6 +42,12 @@ public class PlayerController : MonoBehaviour
         t.position = initialPos;
         t.rotation = GetRotationFromDirection(direction);
         isInvulnerable = invul;
+        hasShiled = false;
+        DirtyHack maybe = GetComponentInChildren<DirtyHack>();
+        if (maybe != null)
+        {
+            Destroy(maybe.gameObject);
+        }
         StartCoroutine("AdvanceMovement");
         StartCoroutine("AdvanceDecay");
     }
