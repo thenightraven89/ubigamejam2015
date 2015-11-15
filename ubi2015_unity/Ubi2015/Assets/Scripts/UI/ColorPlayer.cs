@@ -19,6 +19,8 @@ public class ColorPlayer : MonoBehaviour {
     private KeyCode enterGameKey;
     private KeyCode startGameKey;
 
+    public AudioSource buttonPush;
+
     void Update()
     {
         for (int i = 0; i < 4; i++)
@@ -29,6 +31,7 @@ public class ColorPlayer : MonoBehaviour {
 
             if (Input.GetKeyDown(startGameKey))
             {
+                buttonPush.Play();
                 MoveToDifficulty();
             }
 
@@ -37,6 +40,7 @@ public class ColorPlayer : MonoBehaviour {
                 if (Input.GetKeyDown(enterGameKey))
                 {
                     activePlayers++;
+                    buttonPush.Play();
                     playerImages[i].color = colors[i];
                 }  
             }
@@ -48,6 +52,7 @@ public class ColorPlayer : MonoBehaviour {
 
                     if (Input.GetKeyDown(difficultyKey))
                     {
+                        buttonPush.Play();
                         SetDifficulty(j);
                     }  
                 }
