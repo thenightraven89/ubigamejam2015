@@ -7,11 +7,16 @@ public class PlayerScore : MonoBehaviour
     private int cachedScore = 0;
     
     public void Set(int score)
-    {
+    {        
         if (score != cachedScore)
         {
-            cachedScore = score;
-            GetComponent<Text>().text = score.ToString();
+            cachedScore = Mathf.Clamp(score, 0, 11);
+            var donuts = GetComponentsInChildren<Donut>(true);
+
+            for (int i = 0; i < donuts.Length; i++)
+            {
+                donuts[i].gameObject.SetActive(i < cachedScore);
+            }
         }
     }
 }
