@@ -16,15 +16,22 @@ public class CameraShakeEffect : ImageEffectTween
         base.Awake();
     }
 
+    private Vector3 camPos;
     public override void Play(Transform target)
     {
         base.Play(target);
+        camPos = mainCam.transform.position;
         tweener = DOTween.Shake(() => mainCam.transform.position, x => mainCam.transform.position = x,
-           duration, strength, vibrato, randomness);
+           duration, strength, vibrato, randomness).OnComplete(new TweenCallback(ResetCamera));
         if (loop)
         {
             tweener.SetLoops(-1);
         }
+    }
+
+    private void ResetCamera()
+    {
+        mainCam.transform.DOMove(new Vector3(0f, 32.79f, -21.41f), 0.1f);
     }
 
     public override void Stop(float fadeOutTime)
