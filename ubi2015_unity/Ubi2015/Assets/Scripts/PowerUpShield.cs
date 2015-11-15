@@ -19,7 +19,7 @@ public class PowerUpShield : MonoBehaviour
             affectedPlayer.hasShiled = true;
             shieldInstance = Instantiate(shieldPrefab, col.transform.position, col.transform.rotation) as GameObject;
             Debug.Log(shieldInstance);
-            FXManager.Instance.PlayEffect("powerupsound");
+            FXManager.Instance.PlayEffect("powerupsound", col.transform);
             shieldInstance.transform.parent = affectedPlayer.transform;
             Destroy(transform.GetChild(0).gameObject);
             StartCoroutine(DelayDestroy());

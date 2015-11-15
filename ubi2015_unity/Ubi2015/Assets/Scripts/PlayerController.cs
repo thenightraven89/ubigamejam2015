@@ -191,6 +191,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("PowerupTime"))
         {
             MovePowerupRandomly(other.transform.parent);
+            FXManager.Instance.PlayEffect("powerupsound", transform);
             StartCoroutine("DelayDecay");
         }
     }
