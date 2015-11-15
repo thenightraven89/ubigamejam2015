@@ -174,8 +174,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Debug.Log(gameObject.name + " collided with " + other.tag);
-
         if (other.CompareTag("Player") && !isInvulnerable && !hasShiled)
         {
             Die();

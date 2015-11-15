@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour
     public bool getPlayersFromInspector = false;
     public int nrOfPlayers = 2;
     public GameObject[] playerGOs;
+    public GameObject[] lifeCounters;
 
     private void Awake()
     {
@@ -19,9 +20,15 @@ public class PlayerManager : MonoBehaviour
         for (int i = 0; i < playerGOs.Length; i++)
         {
             if (i < nrOfPlayers)
+            {
                 playerGOs[i].SetActive(true);
+                lifeCounters[i].SetActive(true);
+            }
             else
+            {
                 playerGOs[i].SetActive(false);
+                lifeCounters[i].SetActive(false);
+            }
         }
 
         var allPlayers = GameObject.FindObjectsOfType<PlayerController>();

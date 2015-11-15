@@ -38,7 +38,6 @@ public class TweenAlpha : TweenEffectBase
 
     private void StopCallback()
     {
-        Debug.Log("stopped");
         Stop(0f);
         Destroy(gameObject);
     }
