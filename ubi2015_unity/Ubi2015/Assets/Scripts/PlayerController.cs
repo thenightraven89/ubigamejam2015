@@ -14,8 +14,8 @@ public class PlayerController : MonoBehaviour
 
     public GameObject trailObject;
 
-    private float trailLife = 0.08f;
-    private float ragaz = 2f;
+    private float trailLife = 0.097f;
+    private float ragaz = 1.75f;
     public float speed = 8f;
     private Transform t;
     private Vector3 initialPos;
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     public int life = 5;
     private Queue<GameObject> deadlyTrail;
     private Queue<GameObject> trail;
+    public bool hasShiled;
 
     private void Start()
     {
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log(gameObject.name + " collided with " + other.tag);
 
-        if (other.CompareTag("Player") && !isInvulnerable)
+        if (other.CompareTag("Player") && !isInvulnerable && !hasShiled)
         {
             Die();
             return;
