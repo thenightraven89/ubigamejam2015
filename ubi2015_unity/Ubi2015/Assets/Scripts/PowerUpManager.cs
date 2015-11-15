@@ -39,7 +39,7 @@ public class PowerUpManager : MonoBehaviour
             if (cast)
             {
                 if (!hit.transform.CompareTag("Player") &&
-                    !hit.transform.CompareTag("PowerupTime"))
+                    !hit.transform.CompareTag("PowerupTime") && !hit.transform.CompareTag("Powerup"))
                 {
                     areaOk = true;
                 }
