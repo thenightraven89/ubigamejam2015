@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     private float trailLife = 0.08f;
     private float ragaz = 2f;
-    private float speed = 8f;
+    public float speed = 8f;
     private Transform t;
     private Vector3 initialPos;
     private Vector3 initialDir;
