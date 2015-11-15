@@ -27,6 +27,12 @@ public class ColorPlayer : MonoBehaviour {
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PlayerPrefs.SetInt("numberOfPlayers", 2);
+            Application.LoadLevel("Main");
+        }
+
         for (int i = 0; i < 4; i++)
         {
             enterGameKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button0");

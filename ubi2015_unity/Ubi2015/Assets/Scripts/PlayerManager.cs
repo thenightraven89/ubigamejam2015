@@ -72,5 +72,10 @@ public class PlayerManager : MonoBehaviour
             PlayerPrefs.SetString("winner", lastLivingPlayer);
             Application.LoadLevel("EndScene");
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }
