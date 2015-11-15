@@ -11,20 +11,25 @@ public class TweenAlpha : TweenEffectBase
     {
         base.Play(target);
         tweener = new List<Tweener>();
+        
         if (target != null)
         {
             Renderer[] rend = target.GetComponentsInChildren<Renderer>();
             foreach (var x in rend)
             {
-                Material mat = x.material;
-                x.material = mat;
-                mat.SetFloat("_Mode", 1f);
-                Tweener tw = DOTween.To(() => mat.GetColor("_Color"), c => mat.SetColor("_Color", c),
-                                new Color( mat.color.r, mat.color.g, mat.color.b, 0f), duration);
-                tweener.Add(tw);
-                if (loops != -1)
-                    loops *= 2;
-                tw.SetLoops(loops, LoopType.Yoyo);
+                if (!x.gameObject.name.Equals("ghost") &&
+                    !x.gameObject.name.Equals("smoke"))
+                {
+                    Material mat = x.material;
+                    x.material = mat;
+                    mat.SetFloat("_Mode", 1f);
+                    Tweener tw = DOTween.To(() => mat.GetColor("_Color"), c => mat.SetColor("_Color", c),
+                                    new Color(mat.color.r, mat.color.g, mat.color.b, 0f), duration);
+                    tweener.Add(tw);
+                    if (loops != -1)
+                        loops *= 2;
+                    tw.SetLoops(loops, LoopType.Yoyo);
+                }
             }
 
             tweener[0].OnComplete(new TweenCallback(StopCallback));
@@ -47,12 +52,16 @@ public class TweenAlpha : TweenEffectBase
             tw.Kill();
         }
         Renderer[] rnds = Target.GetComponentsInChildren<Renderer>();
-        
+
         foreach (var rnd in rnds)
         {
-            Material mat = rnd.material;
-            mat.SetFloat("_Mode", 0f);
-            mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
+            if (!rnd.gameObject.name.Equals("ghost") &&
+                !rnd.gameObject.name.Equals("smoke"))
+            {
+                Material mat = rnd.material;
+                mat.SetFloat("_Mode", 0f);
+                mat.SetColor("_Color", new Color(mat.color.r, mat.color.g, mat.color.b, 1f));
+            }
         }
     }
 }

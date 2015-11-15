@@ -7,6 +7,7 @@ public class PlayerManager : MonoBehaviour
     private Dictionary<string, PlayerController> players;
     public bool getPlayersFromInput = false;
     public int nrOfPlayers = 2;
+    public GameObject[] playerGOs;
 
     private void Awake()
     {
@@ -17,6 +18,14 @@ public class PlayerManager : MonoBehaviour
         else
         {
             nrOfPlayers = PlayerPrefs.GetInt("numberOfPlayers");
+        }
+
+        for (int i = 0; i < playerGOs.Length; i++)
+        {
+            if (i < nrOfPlayers)
+                playerGOs[i].SetActive(true);
+            else
+                playerGOs[i].SetActive(false);
         }
 
         var allPlayers = GameObject.FindObjectsOfType<PlayerController>();
