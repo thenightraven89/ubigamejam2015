@@ -86,7 +86,7 @@ public class ColorPlayer : MonoBehaviour
         if (GetActivePlayers() > 1)
         {
             pressStart.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.JoystickButton7))
+            if (Input.GetKeyDown(KeyCode.JoystickButton2))
             {
                 buttonPush.Play();
                 StartGame();
