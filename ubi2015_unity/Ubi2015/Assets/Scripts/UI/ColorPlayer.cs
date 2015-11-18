@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
-public class ColorPlayer : MonoBehaviour {
+public class ColorPlayer : MonoBehaviour
+{
 
     public Color[] colors;
     public RawImage[] playerImages;
@@ -16,76 +16,81 @@ public class ColorPlayer : MonoBehaviour {
 
     private bool canContinue = false;
 
-    public enum MainMenuStates { selectingCharacter, selectingDifficulty };
-    public MainMenuStates currentState = MainMenuStates.selectingCharacter;
-
     private KeyCode difficultyKey;
     private KeyCode enterGameKey;
     private KeyCode startGameKey;
 
     public AudioSource buttonPush;
 
+    private bool player1ready = false;
+    private bool player2ready = false;
+    private bool player3ready = false;
+    private bool player4ready = false;
+
+    private void StartGame()
+    {
+        PlayerPrefs.SetInt("player1", (player1ready == true) ? 1 : 0);
+        PlayerPrefs.SetInt("player2", (player2ready == true) ? 1 : 0);
+        PlayerPrefs.SetInt("player3", (player3ready == true) ? 1 : 0);
+        PlayerPrefs.SetInt("player4", (player4ready == true) ? 1 : 0);
+
+        Application.LoadLevel("Main");
+    }
+
+    private int GetActivePlayers()
+    {
+        var result = 0;
+        if (player1ready) result++;
+        if (player2ready) result++;
+        if (player3ready) result++;
+        if (player4ready) result++;
+
+        return result;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            PlayerPrefs.SetInt("numberOfPlayers", 2);
-            Application.LoadLevel("Main");
+            player1ready = true;
+            player2ready = true;
+            player3ready = false;
+            player4ready = false;
+            StartGame();
         }
 
-        for (int i = 0; i < 4; i++)
+        if (Input.GetKeyDown(KeyCode.Joystick1Button0))
         {
-            enterGameKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button0");
+            player1ready = true;
+            playerImages[0].color = colors[0];
+        }
 
-            startGameKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button7");
+        if (Input.GetKeyDown(KeyCode.Joystick2Button0))
+        {
+            player2ready = true;
+            playerImages[1].color = colors[1];
+        }
 
-            if (Input.GetKeyDown(startGameKey) && canContinue)
+        if (Input.GetKeyDown(KeyCode.Joystick3Button0))
+        {
+            player3ready = true;
+            playerImages[2].color = colors[2];
+        }
+
+        if (Input.GetKeyDown(KeyCode.Joystick4Button0))
+        {
+            player4ready = true;
+            playerImages[3].color = colors[3];
+        }
+
+        if (GetActivePlayers() > 1)
+        {
+            pressStart.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.JoystickButton7))
             {
                 buttonPush.Play();
-                MoveToDifficulty();
+                StartGame();
             }
-
-            if (currentState == MainMenuStates.selectingCharacter)
-            {
-                if (Input.GetKeyDown(enterGameKey))
-                {
-                    activePlayers++;
-                    if (activePlayers > 1)
-                    {
-                        pressStart.SetActive(true);
-                        canContinue = true;
-                    }
-                    buttonPush.Play();
-                    playerImages[i].color = colors[i];
-                }  
-            }
-            else if (currentState == MainMenuStates.selectingDifficulty)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    difficultyKey = (KeyCode)System.Enum.Parse(typeof(KeyCode), "Joystick" + (i + 1).ToString() + "Button" + j.ToString());
-
-                    if (Input.GetKeyDown(difficultyKey))
-                    {
-                        buttonPush.Play();
-                        SetDifficulty(j);
-                    }  
-                }
-            } 
-        }           
-    }
-
-    void MoveToDifficulty()
-    {
-        playerSelection.SetActive(false);
-        difficultySelection.SetActive(true);
-        currentState = MainMenuStates.selectingDifficulty;
-        PlayerPrefs.SetInt("numberOfPlayers", activePlayers);
-    }
-
-    void SetDifficulty(int difficulty)
-    {
-        PlayerPrefs.SetInt("difficulty", difficulty);
-        Application.LoadLevel("Main");
+        }
     }
 }

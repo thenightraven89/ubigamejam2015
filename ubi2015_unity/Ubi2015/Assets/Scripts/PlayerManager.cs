@@ -7,20 +7,25 @@ public class PlayerManager : MonoBehaviour
     private Dictionary<string, PlayerScore> lifeLabels;
     private Dictionary<string, PlayerController> players;
     public bool getPlayersFromInspector = false;
-    public int nrOfPlayers = 2;
     public GameObject[] playerGOs;
     public GameObject[] lifeCounters;
+
+    private bool[] isPlaying = new bool[4] { false, false, false, false };
 
     private void Awake()
     {
         if (!getPlayersFromInspector)
         {
-            nrOfPlayers = PlayerPrefs.GetInt("numberOfPlayers");
+            for (int i = 0; i < 4; i++)
+            {
+                var pstring = "player" + (i + 1).ToString();
+                isPlaying[i] = (PlayerPrefs.GetInt(pstring) == 1) ? true : false;
+            }
         }
 
         for (int i = 0; i < playerGOs.Length; i++)
         {
-            if (i < nrOfPlayers)
+            if (isPlaying[i])
             {
                 playerGOs[i].SetActive(true);
                 lifeCounters[i].SetActive(true);

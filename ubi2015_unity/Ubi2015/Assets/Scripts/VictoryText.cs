@@ -34,7 +34,7 @@ public class VictoryText : MonoBehaviour
             if (Input.GetKeyDown(startGameKey) ||
                 Input.GetKeyDown(KeyCode.Space))
             {
-                Application.LoadLevel("Main");
+                Application.LoadLevel("Menu");
             }
         }
 
