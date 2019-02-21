@@ -48,7 +48,7 @@ public class PowerUpFreeze : MonoBehaviour
         foreach (var mv in affectedMovers)
         {
             mv.speed = 8f;
-            Destroy(mv.transform.FindChild("fx").gameObject);
+            Destroy(mv.transform.Find("fx").gameObject);
         }
         Destroy(gameObject);
     }
